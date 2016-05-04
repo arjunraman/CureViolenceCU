@@ -143,29 +143,6 @@
       height:3px;
     }
 
-    #progress-bar-instructions {
-      position: absolute;
-      right:-160px;
-      bottom: 80px;
-      padding:10px 10px;
-      width:80px;
-      text-align: center;
-      background:white;
-      display:none;
-    }
-
-    #progress-bar-instructions:after {
-      position:absolute;
-      content:' ';
-      top:50px;
-      left:0px;
-      border:solid transparent;
-      border-right:none;
-      border-bottom-color:#FFF;
-      border-width:15px;
-      margin-left:-15px;
-    }
-
     .button {
       text-decoration:none;
       color:black;
@@ -231,7 +208,7 @@
       float:right;
       clear:both;
       list-style:none;
-      width:150px;
+      width:160px;
       padding:8px 13px;
       margin-right:-200px;
       transition:margin-right .25s ease-in-out;
@@ -250,7 +227,6 @@
     #options li:nth-child(3){background:#BFEADD;}
     #options li:nth-child(4){background:#C4B0DD;}
     #options li:nth-child(5){background:#FAE07E;}
-    #options li:nth-child(6){background:#E5F9A6;}
 
     input {
       margin:10px;
@@ -393,6 +369,10 @@
 
     <li class=title>Crime Markers
     <li><label for='options-markers'>Show on Pause</label><input id='options-markers' type='checkbox' name='crime-markers' unchecked>
+
+    <li class=title>Other Cities
+    <li><label for='options-markers'><a href="newyork.html">New York, NY</a></label>
+    <li><label for='options-markers'><a href="chicago.html">Chicago, IL</a></label>
   </ul>
 </div>
 
@@ -882,6 +862,8 @@
 
       var map = new google.maps.Map($('#heatmapArea')[0], myOptions);
 
+      loadKmlLayer('https://data.baltimorecity.gov/api/geospatial/fy7v-tvcr?method=export&format=KML', map);
+
       var heatmap = new HeatmapOverlay(map, {
           'radius':30,
           'visible':true,
@@ -953,6 +935,17 @@
     //adjust the wait time depending on if we are animating(which slows everything down)
     window.setTimeout(fadeEachOption.bind(this, options, isFadeIn), this.isPaused || !this.isAnimating ? 30 : 0);
   };
+
+  function loadKmlLayer(src, map) {
+    var kmlLayer = new google.maps.KmlLayer(src, {
+      suppressInfoWindows: true,
+      preserveViewport: false,
+      map: map
+    });
+    console.log("KML Loaded")
+    console.log(kmlLayer)
+  }
+
 
 
 </script>
