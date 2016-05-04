@@ -752,8 +752,7 @@
 
   CrimeAnimator.prototype.changeFilters = function changeFilters(e) {
     var checkbox = e.target;
-
-    var filterType = Number(checkbox.name);
+    var filterType = checkbox.name;
     if(!checkbox.checked) {
       this.filters.push(filterType);
     } else {
@@ -839,8 +838,10 @@
     for(var i = currentData.length-1 ; i >= 0 ; i--) {
       crime = currentData[i];
       type = crime.code[0]
-      if(this.filters.indexOf(type) >= 0)
+
+      if(this.filters.indexOf(type) >= 0) {
         continue;
+      }
 
       timeFromHighIndex = this.currentDate - crime.epoch;
       var x = timeFromHighIndex / currentTimeRange;
@@ -923,10 +924,14 @@
       // this is important, because if you set the data set too early, the latlng/pixel projection doesn't work
       google.maps.event.addListenerOnce(map, 'idle', function() {
         // should be in the format lat, long, crime code, MS timestamp, day, description
+        // script baltimore_cleanup.py cleans the data from
+        // https://data.baltimorecity.gov/Public-Safety/BPD-Part-1-Victim-Based-Crime-Data/wsfq-mvij
         $.get("data/bal_crime_firearm.csv",
           function( rawData ) {
             var items = $.csv.toObjects(rawData);
+            var max_lat, min_lat, max_long, min_long
             for (i=0;i<items.length;i++) {
+              // TODO set max and min lat/longs
               items[i].epoch = (new Date(items[i].ts)).getTime()
             }
             var crimeAnimator = new CrimeAnimator(items, heatmap, map);
